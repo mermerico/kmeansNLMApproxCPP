@@ -4,7 +4,7 @@
 #include <limits>
 #include <numeric>
 #include <tuple>
-//#include <optional>
+#include <optional>
 
 #include "splitCluster.cpp"
 
@@ -16,7 +16,7 @@ struct clusterInfo{
 
 //X is in points major, dimensions minor order
 //Returns center locations (clusters major). Will always return at least two clusters
-std::vector<float> bisecting_kmeans(float* const X, const int numPoints, const int numDimensions, const int k){//, const std::optional<float> threshold = std::nullopt){
+std::vector<float> bisecting_kmeans(float* const X, const int numPoints, const int numDimensions, const int k, const std::optional<float> threshold = std::nullopt){
 
     std::vector<clusterInfo> currentClusters;
     
@@ -27,7 +27,7 @@ std::vector<float> bisecting_kmeans(float* const X, const int numPoints, const i
 
     double totalSSD = std::numeric_limits<double>::max();
 
-    while ((currentClusters.size() < k)){// & (threshold.has_value() && totalSSD > *threshold)){
+    while ((currentClusters.size() < k) & (threshold.has_value() && totalSSD > ((*threshold)*numPoints))){
 
         // Split the cluster with the highest summed squared distance
         int nextClusterToSplitIdx = -1;

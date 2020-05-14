@@ -7,7 +7,7 @@
 #include "highDimBoxFilter.cpp"
 
 
-void kMeansNLMApprox(float* const I, const int numClusters, const float h, const int sizeX, const int sizeY, float* output) {
+void kMeansNLMApprox(float* const I, int numClusters, const float h, const int sizeX, const int sizeY, float* output) {
 
 	constexpr int radius = 1;
 	constexpr int patchSize = (2 * radius + 1) * (2 * radius + 1);
@@ -36,7 +36,10 @@ void kMeansNLMApprox(float* const I, const int numClusters, const float h, const
 		}
 	}
 
-	std::vector<float> clusterCenters = bisecting_kmeans(sampledPatches.data(), numPatchesToSample, patchSize*numChannels, numClusters);
+	int maxClusters = 100;
+	float threshold = 3e-3;
+	std::vector<float> clusterCenters = bisecting_kmeans(sampledPatches.data(), numPatchesToSample, patchSize*numChannels, maxClusters, threshold);
+	numClusters = clusterCenters.size() / (patchSize*numChannels);
 
 	std::vector<float> W(sizeX * sizeY * numClusters);
 	calcW(expandedDimensions.data(), clusterCenters.data(), sizeY, sizeX, patchSize*3, numClusters, h, W.data());
