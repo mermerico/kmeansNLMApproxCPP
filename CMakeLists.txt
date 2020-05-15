@@ -29,4 +29,4 @@ else()
 	set_property(TARGET testNLM PROPERTY CXX_STANDARD 17)
 endif()
 
-# set(CMAKE_CXX_FLAGS_RELEASE "-g -Wall -O3")
+#set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3 -march=haswell -mtune=native")

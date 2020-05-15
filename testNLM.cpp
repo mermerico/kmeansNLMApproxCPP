@@ -55,13 +55,14 @@ int main(int argc, char** argv)
             }
         }
 
-        constexpr int numClusters = 31;
+        constexpr int numClusters = 10;
+        float clusterThreshold = 3e-3;
         float h = 0.4184;
         std::vector<float> outputImgVector(sizeY * sizeX * numChannels);
 
         auto begin = std::chrono::high_resolution_clock::now();
         //ProfilerStart("NLM.prof");
-        kMeansNLMApprox(inputImgVector.data(), numClusters, h, sizeX, sizeY, outputImgVector.data());
+        kMeansNLMApprox(inputImgVector.data(), numClusters, clusterThreshold, h, sizeX, sizeY, outputImgVector.data());
         //ProfilerStop();
         auto end = std::chrono::high_resolution_clock::now();
         auto dur = end - begin;
@@ -98,16 +99,15 @@ int main(int argc, char** argv)
 
         image_window diffImgWindow(difference_img, "difference image");
         diffImgWindow.set_size(std::min(sizeY, ptrdiff_t(1000)), std::min(sizeX, ptrdiff_t(1000)));
-        diffImgWindow.wait_until_closed();
 
-        /*
         image_window my_windowOrig(img, "Original Image");
         image_window my_windowNLM(output_img, "Output Image");
-
+        my_windowOrig.set_size(std::min(sizeY, ptrdiff_t(1000)), std::min(sizeX, ptrdiff_t(1000)));
+        my_windowNLM.set_size(std::min(sizeY, ptrdiff_t(1000)), std::min(sizeX, ptrdiff_t(1000)));
         
         my_windowOrig.wait_until_closed();
-        my_windowOrig.wait_until_closed();
-        */
+        my_windowNLM.wait_until_closed();
+        diffImgWindow.wait_until_closed();
 
     }
     catch (exception& e)
